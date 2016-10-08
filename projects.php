@@ -11,22 +11,12 @@ session_start();
 	include 'header.php';
 ?>
 
-		<H1 class="indhold_overskrift">Profilside</H1>
-		<p class="indhold_text">Her kan du se dine informationer:</p>
+		<H1 class="indhold_overskrift">Projekter</H1>
+		<p class="indhold_text">Her kan du se dine forskellige projekter:</p>
 		<br>
-			<div class="profil-form">
+			<div class="projekt-form">
 <?php
 
-
-
-// Nedenfor bliver de forskellige variabler lavet, så de svarer til de data der skal sendes til databasen.
-
-$Name = $_POST['Name'];
-$Adress = $_POST['Adress'];
-$Contact = $_POST['Contact'];
-$Phone = $_POST['Phone'];
-$Zipcode = $_POST['Zipcode'];
-$uid = $_POST['uid'];
 
 // Her tjekkes først om man er logget ind og ellers kommer signup formen frem, så man kan registrere sig.
 	if (isset($_SESSION['id'])) {
@@ -37,31 +27,20 @@ $uid = $_POST['uid'];
 
 		$uid = $_SESSION['id'];
 
-		$sql = "SELECT * FROM Client WHERE id='$uid'";
+		$sql = "SELECT * FROM Project WHERE Client_id='$uid'";
 		$result = mysqli_query($conn, $sql);
 
-
-		// Indsætter den hentede række i en array fra det id der er hentet fra databasen. 
-		$row = mysqli_fetch_assoc($result);
-
-
-		echo "
-
-
-			<p>id:" . " " . $row['id'] . "</p>
-			<p>Navn:" . " " . $row['Name'] . "</p>
-			<p>Adresse:" . " " . $row['Adress'] . "</p>
-			<p>Kontakt:" . " " . $row['Contact'] . "</p>
-			<p>Telefon:" . " " . $row['Phone'] . "</p>
-			<br><br>
-
-
-
-		";	
-
-
-	} else {
-		echo "Du skal være logget ind for at se dine profil oplysninger";
+		echo "<a href='create-project.php' class='create-button'>Opret nyt projekt</a>"; echo "<a href='edit-project.php' class='create-button'>Rediger i eksisterende projekt</a><br><br>";
+			while ($row = $result->fetch_assoc()) {
+				echo "<p>Projekt Navn:" . " " . $row['Project_Name'] . "</p>
+					<p>Projekt Beskrivelse:" . " " . $row['Project_Description'] . "</p>
+					<p>Projekt Startdato:" . " " . $row['Project_Startdate'] . "</p>
+					<p>Projekt Slutdato:" . " " . $row['Project_Enddate'] . "</p>
+					<br><br>";
+			}
+	} 
+	else {
+		echo "Du skal være logget ind for at kunne oprette eller ændre i projekter.";
 	}
 
 ?>
