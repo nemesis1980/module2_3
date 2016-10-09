@@ -112,3 +112,31 @@ margin-left: 60px;
 	color: white;
 	margin-right: 20px;
 }
+
+.project-box {
+	position: relative;
+	border: none;
+	border-radius: 5px;
+	background-color: #4E9CAF;
+	padding: 10px;
+	margin-right: 60px;
+}
+
+.edit-form {
+	position: absolute;
+	top: 5px;
+	right: 20px;
+}
+
+.edit-form button {
+	width: 40px;
+	height: 20px;
+	color: #333333;
+	background-color: #4E9CAF;
+	opacity: 0.7;
+	border: none;
+}
+
+.edit-form button:hover {
+	opacity: 1;
+}

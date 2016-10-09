@@ -8,31 +8,31 @@ include '../dbcon.php';
 
 // Nedenfor bliver de forskellige variabler lavet, så de svarer til de data der skal sendes til databasen.
 
-$PName = $_POST['PName'];
-$PDesc = $_POST['PDesc'];
-$PStart = $_POST['PStart'];
-$PEnd = $_POST['PEnd'];
-$CID = $_SESSION['id'];
+$pid = (isset($_POST['pid']) ? $_POST['pid'] : null);
+$PName = (isset($_POST['PName']) ? $_POST['PName'] : null);
+$PDesc = (isset($_POST['PDesc']) ? $_POST['PDesc'] : null);
+$PStart = (isset($_POST['PStart']) ? $_POST['PStart'] : null);
+$PEnd = (isset($_POST['PEnd']) ? $_POST['PEnd'] : null);
 
 // Nedenfor tjekkes om der er indtastet data i alle områder i signup formen, ellers bliver insert statement ikke kørt, og man bliver sendt tilbage til signupsiden med en fejl.
 
 if (empty($PName)) {
-	header("Location: ../create-project.php?error=empty");
+	header("Location: ../edit-project.php?error=empty");
 	exit();
 }
 
 if (empty($PDesc)) {
-	header("Location: ../create-project.php?error=empty");
+	header("Location: ../edit-project.php?error=empty");
 	exit();
 }
 
 if (empty($PStart)) {
-	header("Location: ../create-project.php?error=empty");
+	header("Location: ../edit-project.php?error=empty");
 	exit();
 }
 
 if (empty($PEnd)) {
-	header("Location: ../create-project.php?error=empty");
+	header("Location: ../edit-project.php?error=empty");
 	exit();
 }
 
@@ -49,14 +49,19 @@ Desuden bliver der tjekket for om projekt navnet eksisterer i forvejen.
 	$pnamecheck = mysqli_num_rows($result);
 
 	if ($pnamecheck > 0) {
-		header("Location: ../create-project.php?error=projectname");
+		header("Location: ../edit-project.php?error=projectname");
 		exit();
 	}
 	else {
-		$sql = "INSERT INTO Project (Project_Name, Project_Description, Project_Startdate, Project_Enddate, Client_id)
-				VALUES ('$PName', '$PDesc', '$PStart', '$PEnd', '$CID')";
-		$result = mysqli_query($conn, $sql);
-	}
+		$sql = "UPDATE Project SET Project_Name='$PName', Project_Description='$PDesc', Project_Startdate='$PStart', Project_Enddate='$PEnd' WHERE pid='$pid'";
+		$conn->query($sql);
+
+/*		if (mysqli_query($conn, $sql)) {
+    		echo "Record updated successfully";
+		} else {
+    		echo "Error updating record: " . mysqli_error($conn);
+		}
+*/	}
 
 	// Nedenfor bliver man efter dataen er sendt, sendt tilbage til forsiden.
 

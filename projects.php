@@ -30,12 +30,30 @@ session_start();
 		$sql = "SELECT * FROM Project WHERE Client_id='$uid'";
 		$result = mysqli_query($conn, $sql);
 
-		echo "<a href='create-project.php' class='create-button'>Opret nyt projekt</a>"; echo "<a href='edit-project.php' class='create-button'>Rediger i eksisterende projekt</a><br><br>";
+		echo "<a href='create-project.php' class='create-button'>Opret nyt projekt</a><br><br>";
 			while ($row = $result->fetch_assoc()) {
-				echo "<p>Projekt Navn:" . " " . $row['Project_Name'] . "</p>
+				echo "<div class='project-box'><p>Projekt id:" . " " . $row['pid'] . "</p>
+					<p>Projekt Navn:" . " " . $row['Project_Name'] . "</p>
 					<p>Projekt Beskrivelse:" . " " . $row['Project_Description'] . "</p>
 					<p>Projekt Startdato:" . " " . $row['Project_Startdate'] . "</p>
 					<p>Projekt Slutdato:" . " " . $row['Project_Enddate'] . "</p>
+					<form class='edit-form' method='POST' action='edit-project.php'>
+						<input type='hidden' name='pid' value='".$row['pid']."'>
+						<input type='hidden' name='Project_Name' value='".$row['Project_Name']."'>
+						<input type='hidden' name='Project_Description' value='".$row['Project_Description']."'>
+						<input type='hidden' name='Project_Startdate' value='".$row['Project_Startdate']."'>
+						<input type='hidden' name='Project_Enddate' value='".$row['Project_Enddate']."'>
+						<button>Rediger</button>
+					</form>
+					<form class='delete-form' method='POST' action='delete-project.php'>
+						<input type='hidden' name='pid' value='".$row['pid']."'>
+						<input type='hidden' name='Project_Name' value='".$row['Project_Name']."'>
+						<input type='hidden' name='Project_Description' value='".$row['Project_Description']."'>
+						<input type='hidden' name='Project_Startdate' value='".$row['Project_Startdate']."'>
+						<input type='hidden' name='Project_Enddate' value='".$row['Project_Enddate']."'>
+						<button>Slet</button>
+					</form>
+					</div>
 					<br><br>";
 			}
 	} 
