@@ -1,47 +1,56 @@
 <?php
+session_start();
+// Vi starter en session her.
+
+// Include bliver brugt til at loade database connection filen.
+
+	include 'dbcon.php';
+
+//Her bliver header.php, som er vores menu, inkluderet på siden
+
 	include 'header.php';
-	//Her bliver header.php, som er vores menu, inkluderet på siden
 ?>
 
-<?php
-
-// Her bliver der tjekket, om der er en fejl på siden, og efterfølgende fortalt brugeren at de enten skal udfylde alle felter eller at brugernavnet allerede eksisterer.
-
-	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-	if(strpos($url, 'error=empty') !==false) {
-		echo "Udfyld alle felter <br><br><br>";
-	}
-	
-/*
-	elseif(strpos($url, 'error=projectname') !==false) {
-		echo "Projekt navn eksisterer allerede <br><br>";
-	}
-*/
-// Her tjekkes der om man er logget ind i systemet
-
-	if (isset($_SESSION['id'])) {
-	} else {
-		echo "Du er ikke logget ind";
-	}
-?>
-
-<br><br><br>
-
-<?php
+<div class="delete-box">
+	<?php
 
 
-// Her tjekkes først om man er logget ind og ellers kommer projekt oprettelses formen frem, så man kan oprette et projekt.
-	if (isset($_SESSION['id'])) {
-//		echo $_POST['pid'];
-		echo "<form class='register' action='includes/edit-project.inc.php' method='POST'>
-			<input type='hidden' name='pid' value='".$_POST['pid']."'>
-			<input type='text' name='PName' value='".$_POST['Project_Name']."'><br>
-			<input type='text' name='PDesc' value='".$_POST['Project_Description']."'><br>
-			<input type='text' name='PStart' value='".$_POST['Project_Startdate']."'><br>
-			<input type='text' name='PEnd' value='".$_POST['Project_Enddate']."'><br>
-			<button type='submit'>Gem Projekt</button>
-		</form>";
-	}
-?>
+	// Her tjekkes først om man er logget ind og ellers kommer signup formen frem, så man kan registrere sig.
+		if (isset($_SESSION['id'])) {
+
+			// Nedenfor bliver sql statements lavet, til at tjekke de indtastede værdier fra brugeren, i formen til at logge ind på hjemmesiden, og hvis username eller password er forkert, kommer der en fejlbesked.
+
+			$conn = mysqli_connect($servername, $username, $password, $table);
+
+			$pid = $_POST['pid'];
+
+			$sql = "SELECT * FROM Project WHERE pid='$pid'";
+			$result = mysqli_query($conn, $sql);
+
+			while ($row = $result->fetch_assoc()) {
+				echo "<div class='project-box'><p>Projekt id:" . " " . $row['pid'] . "</p>
+					<p>Projekt Navn:" . " " . $row['Project_Name'] . "</p>
+					<p>Projekt Beskrivelse:" . " " . $row['Project_Description'] . "</p>
+					<p>Projekt Startdato:" . " " . $row['Project_Startdate'] . "</p>
+					<p>Projekt Slutdato:" . " " . $row['Project_Enddate'] . "</p>
+					<br><br>
+					<p>Er du sikker på at du vil slette dette projekt?</p>
+					<form class ='register' action='includes/delete-project.inc.php' method='POST'>
+					<input type='hidden' name='pid' value='".$_POST['pid']."'>
+					<button>Ja, Slet projektet</button>
+					</form>
+					</div>
+					<br><br>";
+				}
+		} 
+		else {
+			echo "Du skal være logget ind for at kunne oprette eller ændre i projekter.";
+		}
+
+	?>
+
+</div>
+
+
 </body>
 </html>
